@@ -1,0 +1,39 @@
+# Site configuration. Full reference:
+# https://www.getzola.org/documentation/getting-started/configuration/
+
+base_url = "https://micro-rust.github.io"
+title = "micro-rust"
+description = "Notes and write-ups about my programming projects."
+default_language = "en"
+
+# Compiles sass/style.scss into /style.css
+compile_sass = true
+
+# Atom feed at /atom.xml
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+taxonomies = [{ name = "tags" }]
+
+# Posts are plain Markdown: don't interpret {{ }} / {% %} in them as template
+# syntax, so code samples such as Rust's format!("{{}}") render as written.
+skip_content_templating = ["posts/**"]
+
+[markdown]
+bottom_footnotes = true
+# > [!NOTE] / [!TIP] / [!WARNING] ... callouts
+github_alerts = true
+insert_anchor_links = "right"
+
+[markdown.highlighting]
+# Code colors follow the page's light/dark theme. Theme list:
+# https://textmate-grammars-themes.netlify.app/
+light_theme = "github-light"
+dark_theme = "github-dark"
+error_on_missing_language = true
+
+[extra]
+# Used by the templates; edit freely.
+tagline = "Programming projects, notes and experiments."
+author = "micro-rust"
+github = "https://github.com/micro-rust"

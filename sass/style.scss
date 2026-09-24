@@ -1,0 +1,271 @@
+// Compiled by Zola into /style.css. Colors and fonts live in _theme.scss.
+@use "theme";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--accent-hover); }
+
+// Header / footer
+.site-header,
+.site-footer {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.site-header { border-bottom: 1px solid var(--border); }
+.site-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.site-title:hover { color: var(--accent); }
+.site-nav { display: flex; align-items: center; gap: 1rem; font-size: 0.95rem; }
+.site-nav a { text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.theme-toggle {
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+
+// Content
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  margin: 2rem 0 0.75rem;
+}
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; }
+h3 { font-size: 1.2rem; }
+.zola-anchor { margin-left: 0.4rem; text-decoration: none; opacity: 0; }
+:is(h1, h2, h3, h4, h5, h6):hover .zola-anchor { opacity: 0.6; }
+
+p, ul, ol, pre, blockquote, table { margin: 0 0 1.1rem; }
+ul, ol { padding-left: 1.5rem; }
+li + li { margin-top: 0.25rem; }
+li > ul, li > ol { margin: 0.25rem 0 0; }
+
+img { max-width: 100%; height: auto; border-radius: var(--radius); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+blockquote {
+  padding: 0.25rem 1rem;
+  border-left: 3px solid var(--quote-border);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+blockquote p { margin: 0.5rem 0; }
+
+table { border-collapse: collapse; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: 0.4rem 0.8rem; text-align: left; }
+th { background: var(--bg-elevated); }
+
+// Code
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+pre {
+  // Override the highlighter's inline styles so code follows the theme toggle
+  // rather than the OS setting.
+  color-scheme: inherit !important;
+  background: var(--code-bg) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: 0.875rem; }
+pre code[data-name]::before {
+  content: attr(data-name);
+  float: right;
+  color: var(--text-muted);
+}
+// Required by Zola's highlighter (line wrappers, line numbers, highlighted lines)
+.giallo-l { display: inline-block; min-height: 1lh; width: 100%; }
+.giallo-ln {
+  display: inline-block;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0 0.4em;
+  min-width: 3ch;
+  text-align: right;
+  opacity: 0.6;
+}
+pre mark { display: block; color: inherit; background: color-mix(in srgb, var(--accent) 15%, transparent); }
+
+// GitHub-style callouts: > [!NOTE], > [!TIP], > [!IMPORTANT], > [!WARNING], > [!CAUTION]
+[class^="markdown-alert-"] {
+  color: var(--text);
+  border-left-color: var(--alert);
+  &::before { display: block; margin-top: 0.4rem; font-weight: 600; color: var(--alert); }
+}
+@each $kind, $label in (note: "Note", tip: "Tip", important: "Important", warning: "Warning", caution: "Caution") {
+  .markdown-alert-#{$kind} { --alert: var(--#{$kind}); &::before { content: $label; } }
+}
+
+// Footnotes
+.footnotes { margin-top: 2.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--text-muted); }
+
+// Post list, post header and navigation
+.tagline { color: var(--text-muted); margin-top: -0.25rem; }
+.post-list { list-style: none; padding: 0; }
+.post-item { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.post-item p { margin: 0.25rem 0 0; }
+.post-link { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
+.post-link:hover { text-decoration: underline; }
+.post-meta { color: var(--text-muted); font-size: 0.875rem; }
+.post-header { margin-bottom: 2rem; }
+.post-header h1 { margin-bottom: 0.25rem; }
+// Previous / next post cards at the bottom of a post
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.post-nav a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  text-decoration: none;
+}
+.post-nav a:hover { border-color: var(--accent); }
+.post-nav-next { grid-column: 2; text-align: right; }
+.post-nav-label { font-size: 0.8rem; color: var(--text-muted); }
+.post-nav-title { font-weight: 600; }
+@media (max-width: 36rem) {
+  .post-nav { grid-template-columns: 1fr; }
+  .post-nav-next { grid-column: 1; }
+}
+
+// Post outline ("On this page"): a box above the post on narrow screens...
+.toc {
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  ol { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+  ol ol { margin: 0.2rem 0 0; padding-left: 0.9rem; }
+  li + li { margin-top: 0.2rem; }
+  a {
+    display: block;
+    padding: 0.1rem 0 0.1rem 0.6rem;
+    border-left: 2px solid transparent;
+    color: var(--text-muted);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  a:hover { color: var(--text); }
+  a.active { color: var(--accent); border-left-color: var(--accent); }
+}
+
+// ...and a sticky sidebar left of the post on wide screens. The post column stays
+// aligned with the header; the outline sits in the left margin.
+$toc-breakpoint: 76rem;
+@media (min-width: $toc-breakpoint) {
+  .post-layout {
+    max-width: none;
+    display: grid;
+    // Middle column = the header's inner width (content width minus its side padding)
+    grid-template-columns: 1fr minmax(0, calc(var(--content-width) - 2.5rem)) 1fr;
+    column-gap: 2rem;
+    align-items: start;
+  }
+  .post-layout > .post { grid-column: 2; grid-row: 1; }
+  .toc {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    width: 100%;
+    max-width: 15rem;
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+}
+
+// Leave some room above a heading when jumping to it
+.post-body :is(h2, h3, h4) { scroll-margin-top: 1.5rem; }
+
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 0.75rem 0 0; }
+.tags a {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.1rem 0.7rem;
+  text-decoration: none;
+}
+.tags a:hover { color: var(--accent); border-color: var(--accent); }
+.tag-index { padding-left: 1.25rem; }

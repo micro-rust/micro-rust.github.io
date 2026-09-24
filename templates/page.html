@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+{% block description %}{{ page.description or config.description }}{% endblock description %}
+{% block main_class %}container post-layout{% endblock main_class %}
+
+{% block content %}
+{% if page.toc %}
+{# Outline of the post's headings (h2 + h3). Sidebar on wide screens, collapsible box on narrow ones. #}
+<aside class="toc">
+  <details open>
+    <summary>On this page</summary>
+    <ol>
+      {% for h in page.toc %}
+      <li>
+        <a href="#{{ h.id }}">{{ h.title }}</a>
+        {% if h.children %}
+        <ol>
+          {% for child in h.children %}
+          <li><a href="#{{ child.id }}">{{ child.title }}</a></li>
+          {% endfor %}
+        </ol>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </details>
+</aside>
+{% endif %}
+
+<article class="post">
+  <header class="post-header">
+    <h1>{{ page.title }}</h1>
+    <div class="post-meta">
+      {% if page.date %}<time datetime="{{ page.date }}">{{ page.date | date(format="%B %-d, %Y") }}</time> &middot; {% endif %}
+      {{ page.reading_time }} min read
+    </div>
+    {% if page.taxonomies?.tags %}{{<tag_list tags={page.taxonomies.tags} />}}{% endif %}
+  </header>
+
+  <div class="post-body">
+    {{ page.content | safe }}
+  </div>
+
+  {% if page.higher or page.lower %}
+  <nav class="post-nav" aria-label="More posts">
+    {# In a date-sorted section, "higher" is the older post and "lower" the newer one. #}
+    {% if page.higher %}
+    <a class="post-nav-prev" href="{{ page.higher.permalink }}">
+      <span class="post-nav-label">&larr; Previous</span>
+      <span class="post-nav-title">{{ page.higher.title }}</span>
+    </a>
+    {% endif %}
+    {% if page.lower %}
+    <a class="post-nav-next" href="{{ page.lower.permalink }}">
+      <span class="post-nav-label">Next &rarr;</span>
+      <span class="post-nav-title">{{ page.lower.title }}</span>
+    </a>
+    {% endif %}
+  </nav>
+  {% endif %}
+</article>
+{% endblock content %}
+
+{% block scripts %}
+{% if page.toc %}<script src="{{ get_url(path='js/toc.js', cachebust=true) }}" defer></script>{% endif %}
+{% endblock scripts %}

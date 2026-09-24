@@ -1,0 +1,68 @@
+name: Deploy blog to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Nothing gets write access unless a job asks for it below.
+permissions: {}
+
+# One deployment at a time; a newer push waits instead of cancelling a deploy mid-way.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # To upgrade: pick a release at least a week old from
+  # https://github.com/getzola/zola/releases and copy the sha256 "digest" of
+  # the x86_64-unknown-linux-gnu asset shown on that release page.
+  ZOLA_VERSION: "0.23.6"
+  ZOLA_SHA256: "8f5132b3522412d04e395e0b25f6d68613ad272a873e54a2b3ebf664873024a4"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      # Actions are pinned to full commit SHAs (tags can be moved; SHAs can't).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Zola (checksum-verified)
+        run: |
+          archive="zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$archive" \
+            "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/${archive}"
+          echo "${ZOLA_SHA256}  $RUNNER_TEMP/$archive" | sha256sum --check --strict
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Build site
+        run: |
+          zola --version
+          zola build 2>&1 | tee "$RUNNER_TEMP/build.log"
+          # Zola only warns when a post is skipped (e.g. missing date); make it an error.
+          if grep -q "ignored" "$RUNNER_TEMP/build.log"; then
+            echo "::error::Some posts were ignored, see the log above."
+            exit 1
+          fi
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

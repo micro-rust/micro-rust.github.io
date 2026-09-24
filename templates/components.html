@@ -1,0 +1,23 @@
+{# Reusable pieces, callable from any template as {{<name ... />}}. #}
+
+{% component post_list(pages) %}
+<ul class="post-list">
+  {% for page in pages %}
+  <li class="post-item">
+    <a class="post-link" href="{{ page.permalink }}">{{ page.title }}</a>
+    <div class="post-meta"><time datetime="{{ page.date }}">{{ page.date | date(format="%B %-d, %Y") }}</time></div>
+    {% if page.description %}<p class="post-desc">{{ page.description }}</p>{% endif %}
+  </li>
+  {% else %}
+  <li class="post-item">No posts yet.</li>
+  {% endfor %}
+</ul>
+{% endcomponent post_list %}
+
+{% component tag_list(tags) %}
+<ul class="tags">
+  {% for tag in tags %}
+  <li><a href="{{ get_taxonomy_url(kind='tags', term=tag) }}">#{{ tag }}</a></li>
+  {% endfor %}
+</ul>
+{% endcomponent tag_list %}

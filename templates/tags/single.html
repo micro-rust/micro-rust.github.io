@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}#{{ term.name }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+<h1>Posts tagged #{{ term.name }}</h1>
+{{<post_list pages={term.pages} />}}
+<p><a href="{{ config.base_url }}/tags/">All tags</a></p>
+{% endblock content %}

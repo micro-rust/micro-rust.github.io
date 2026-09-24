@@ -1,0 +1,60 @@
+// ==========================================================================
+// Theme: colors, fonts and sizes. Restyling the blog starts here.
+// :root is the dark theme (the default); [data-theme="light"] overrides it.
+// ==========================================================================
+
+:root {
+  // Colors (dark)
+  --bg: #0f1115;
+  --bg-elevated: #171a21;
+  --text: #e6e8ec;
+  --text-muted: #9aa1ad;
+  --accent: #7dd3fc;
+  --accent-hover: #bae6fd;
+  --border: #2a2f3a;
+  --code-bg: #161b22;
+  --code-text: #f1c9a0;
+  --quote-border: #7dd3fc;
+
+  // Callout colors (> [!NOTE] etc.)
+  --note: #58a6ff;
+  --tip: #3fb950;
+  --important: #a371f7;
+  --warning: #d29922;
+  --caution: #f85149;
+
+  // Typography
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font-body);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --font-size: 1.0625rem;
+  --line-height: 1.7;
+
+  // Layout
+  --content-width: 46rem;
+  --radius: 8px;
+
+  // Also switches the syntax highlighting colors (they use light-dark()).
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-elevated: #f5f6f8;
+  --text: #1b1e24;
+  --text-muted: #5b6270;
+  --accent: #0b6bcb;
+  --accent-hover: #084b91;
+  --border: #dfe2e8;
+  --code-bg: #f6f8fa;
+  --code-text: #9a3412;
+  --quote-border: #0b6bcb;
+
+  --note: #0969da;
+  --tip: #1a7f37;
+  --important: #8250df;
+  --warning: #9a6700;
+  --caution: #cf222e;
+
+  color-scheme: light;
+}
